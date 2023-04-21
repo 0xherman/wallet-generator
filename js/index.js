@@ -1,4 +1,5 @@
 (function ($) {
+    let currentAddress = null;
 	$('#generateBtn').click(async () => {
         // Clear previous values
         $('#wallet-data').hide();
@@ -10,7 +11,8 @@
         // Generate and load wallet
         var randomSeed = ethers.Wallet.createRandom();
         var wallet = ethers.Wallet.fromMnemonic(randomSeed.mnemonic.phrase);
-        
+        currentAddress = randomSeed.address;
+
         // Show new values
         $('#address').val(randomSeed.address);
         $('#mnemonic').val(randomSeed.mnemonic.phrase);
@@ -20,7 +22,9 @@
         // Encrypt last since it takes time
 		const password = $('#walletPassword').val();
         const json = await randomSeed.encrypt(password);
-        $('#encryptedJson').val(json);
+        if (currentAddress == randomSeed.address) {
+            $('#encryptedJson').val(json);
+        }
 	});
 
     $('.copy-btn').click(async function () {
